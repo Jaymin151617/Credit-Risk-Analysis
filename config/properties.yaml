@@ -1,0 +1,6 @@
+KAGGLE:
+  dataset_name: taweilo/loan-approval-classification-data
+  file_name: loan_data.csv
+
+LOCAL:
+  file_name: data.csv
