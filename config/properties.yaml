@@ -3,4 +3,5 @@ KAGGLE:
   file_name: loan_data.csv
 
 LOCAL:
-  file_name: data.csv
+  inital_file_name: raw_data.csv
+  cleaned_file_name: cleaned_data.csv
