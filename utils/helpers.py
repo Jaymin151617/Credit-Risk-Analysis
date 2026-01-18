@@ -1,3 +1,4 @@
+from sqlalchemy import column
 import yaml
 import warnings
 import numpy as np
@@ -84,6 +85,7 @@ class Helpers:
         plt.tight_layout() # Prevent clipping
         plt.show()
 
+
     def create_boxplot(
             self, 
             df: pd.DataFrame, 
@@ -118,5 +120,42 @@ class Helpers:
         sns.scatterplot(data=df, x=x_axis, y=y_axis, hue=hue, alpha=0.7)
         
         plt.title(f'Scatterplot of {y_axis} vs {x_axis}')
+        plt.tight_layout() # Prevent clipping
+        plt.show()
+
+
+    def create_distribution_plot(
+            self, 
+            df: pd.DataFrame, 
+            column: str, 
+            bins: int = 30, 
+            hue: str = None
+        ) -> None:
+        """Create a distribution plot using seaborn."""
+
+        plt.figure(figsize=(10, 6)) # Wider figure for better visibility
+        sns.histplot(data=df, x=column, hue=hue, bins=bins, kde=True, stat='density')
+        plt.axvline(df[column].mean(), color="r", label="Mean")
+        plt.axvline(df[column].median(), color="g", label="Median")
+
+        plt.title(f'Distribution of {column}')
+        plt.tight_layout() # Prevent clipping
+        plt.show()
+
+
+    def create_correlation_heatmap(
+            self, 
+            df: pd.DataFrame, 
+            method: str = 'pearson', 
+            annot: bool = True, 
+            cmap: str = 'magma'
+        ) -> None:
+        """Create a correlation heatmap using seaborn."""
+
+        plt.figure(figsize=(12, 10)) # Larger figure for better visibility
+        corr = df.corr(method=method)
+        sns.heatmap(corr, annot=annot, fmt=".2f", cmap=cmap, vmin=-1, vmax=1, center=0, square=True, cbar_kws={"shrink": .8})
+        
+        plt.title(f'Correlation Heatmap ({method.capitalize()} method)')
         plt.tight_layout() # Prevent clipping
         plt.show()
