@@ -135,8 +135,14 @@ class Helpers:
 
         plt.figure(figsize=(10, 6)) # Wider figure for better visibility
         sns.histplot(data=df, x=column, hue=hue, bins=bins, kde=True, stat='density')
-        plt.axvline(df[column].mean(), color="r", label="Mean")
-        plt.axvline(df[column].median(), color="g", label="Median")
+        line_mean = plt.axvline(df[column].mean(), color="darkred", linestyle="--")
+        line_median = plt.axvline(df[column].median(), color="darkgreen", linestyle="--")
+
+        plt.legend(
+            handles=[line_mean, line_median],
+            labels=["Mean", "Median"],
+            loc="upper right"
+        )
 
         plt.title(f'Distribution of {column}')
         plt.tight_layout() # Prevent clipping
