@@ -1,4 +1,4 @@
-from sqlalchemy import column
+from typing import Tuple
 import yaml
 import warnings
 import numpy as np
@@ -6,6 +6,7 @@ import pandas as pd
 import matplotlib.pyplot as plt
 import seaborn as sns
 from pathlib import Path
+from sklearn.preprocessing import PowerTransformer
 
 class Helpers:
 
@@ -135,6 +136,20 @@ class Helpers:
 
         plt.figure(figsize=(10, 6)) # Wider figure for better visibility
         sns.histplot(data=df, x=column, hue=hue, bins=bins, kde=True, stat='density')
+
+        # compute skew
+        skew_val = df[column].skew()
+
+        # add skew text
+        plt.text(
+            0.99, 0.88,                      # normalized location (right top)
+            f"Skewness = {skew_val:.2f}",    # text
+            transform=plt.gca().transAxes,   # coordinates relative to axes
+            ha='right', va='top',
+            fontsize=12, color="black",
+            bbox={'boxstyle': 'round,pad=0.3', 'facecolor': 'white', 'alpha': 0.7}
+        )
+
         line_mean = plt.axvline(df[column].mean(), color="darkred", linestyle="--")
         line_median = plt.axvline(df[column].median(), color="darkgreen", linestyle="--")
 
@@ -165,3 +180,31 @@ class Helpers:
         plt.title(f'Correlation Heatmap ({method.capitalize()} method)')
         plt.tight_layout() # Prevent clipping
         plt.show()
+
+
+    def power_transform(
+            self,
+            df: pd.DataFrame,
+            columns: list,
+            method: str = 'yeo-johnson'
+        ) -> Tuple[pd.DataFrame, PowerTransformer]:
+        """Apply power transformation to specified columns in the DataFrame."""
+        
+        pt = PowerTransformer(method=method)
+        df_out = df.copy()
+        # fit_transform expects 2D array
+        df_out.loc[:, columns] = pt.fit_transform(df_out[columns].values)
+        return df_out, pt
+    
+
+    def reverse_power_transform(
+            self,
+            df: pd.DataFrame,
+            columns: list,
+            pt: PowerTransformer,
+        ) -> pd.DataFrame:
+        """Reverse power transformation on specified columns in the DataFrame."""
+        
+        df_out = df.copy()
+        df_out.loc[:, columns] = pt.inverse_transform(df_out[columns].values)
+        return df_out
