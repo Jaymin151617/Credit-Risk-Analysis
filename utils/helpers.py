@@ -5,8 +5,11 @@ import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
 import seaborn as sns
+from pprint import pprint
 from pathlib import Path
 from sklearn.preprocessing import PowerTransformer
+from sklearn.model_selection import StratifiedKFold
+from skopt import BayesSearchCV
 
 class Helpers:
 
@@ -53,7 +56,6 @@ class Helpers:
         })
 
         # Seaborn style settings
-
         custom_rc = {                  # Customize additional rc params
             "axes.labelsize": 12,
             "legend.fontsize": 10,
@@ -211,3 +213,32 @@ class Helpers:
         df_out = df.copy()
         df_out.loc[:, columns] = pt.inverse_transform(df_out[columns].values)
         return df_out
+    
+
+    def find_best_params(
+            self,
+            model: object,
+            search_space: dict,
+            X_train: pd.DataFrame,
+            y_train: pd.Series,
+            metric: str,
+            iterations: int = 50,
+            random_state: int = 42,
+        ) -> BayesSearchCV:
+        """Find best hyperparameters using Bayesian Optimization."""
+
+        opt = BayesSearchCV(
+            model,
+            search_spaces=search_space,
+            n_iter=iterations,
+            cv=StratifiedKFold(n_splits=5, random_state=random_state, shuffle=True),
+            scoring=metric,
+            n_jobs=-1,
+            random_state=random_state
+        )
+
+        opt.fit(X_train, y_train)
+        print("Best Parameters:")
+        pprint(dict(opt.best_params_))
+
+        return opt.best_estimator_
