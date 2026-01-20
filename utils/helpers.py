@@ -39,6 +39,9 @@ class Helpers:
         # Ingore warnings
         warnings.filterwarnings('ignore')
 
+        # NumPy default settings
+        np.random.seed(100)
+
         # Pandas default settings
         pd.options.display.float_format = '{:.2f}'.format
 

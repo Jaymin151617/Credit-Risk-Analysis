@@ -7,3 +7,6 @@ LOCAL:
   cleaned_file_name: cleaned_data.csv
   feature_engineered_file_name: feature_engineered_data.csv
   transformer_file_name: power_transformer.pkl
+
+models:
+  random_state: 100
