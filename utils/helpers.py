@@ -228,12 +228,13 @@ class Helpers:
         """Find best hyperparameters using Bayesian Optimization."""
 
         opt = BayesSearchCV(
-            model,
+            estimator=model,
             search_spaces=search_space,
             n_iter=iterations,
-            cv=StratifiedKFold(n_splits=5, random_state=random_state, shuffle=True),
+            cv=StratifiedKFold(n_splits=3, random_state=random_state, shuffle=True),
             scoring=metric,
-            n_jobs=-1,
+            n_points=2,
+            pre_dispatch='2*n_jobs',
             random_state=random_state
         )
 
