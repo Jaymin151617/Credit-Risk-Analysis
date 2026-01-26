@@ -10,6 +10,7 @@ from pathlib import Path
 from sklearn.preprocessing import PowerTransformer
 from sklearn.model_selection import StratifiedKFold
 from skopt import BayesSearchCV
+from shap import Explanation
 
 class Helpers:
 
@@ -243,3 +244,85 @@ class Helpers:
         pprint(dict(opt.best_params_))
 
         return opt.best_estimator_
+
+
+    def create_shap_waterfall(
+            self,
+            shap_object: Explanation,
+            index: int
+        ) -> None:
+        """
+        Create and display a horizontal waterfall plot for a single SHAP explanation.
+        Shifts SHAP contributions so baseline is at 0 and converts to percent.
+        """
+        # --- Gather and prepare data ---
+        features = list(shap_object[index].feature_names)
+        vals = np.array(shap_object[index].values, dtype=float).flatten()
+        base = float(shap_object[index].base_values)
+
+        # Shift each contribution so base is effectively 0 and convert to percent
+        shifted_shap = (vals + base / len(features)) * 100.0  # percentage-scale contributions
+        total_pred = sum(shifted_shap)
+
+        # Order features by absolute contribution (largest magnitude first)
+        order = np.argsort(np.abs(shifted_shap))[::-1]
+        feat_ordered = [features[i] for i in order]
+        contribs = shifted_shap[order]
+
+        # --- plotting setup ---
+        n = len(contribs)
+        fig_w = 10
+        fig_h = max(3, n * 0.45)
+        _, ax = plt.subplots(figsize=(fig_w, fig_h))
+
+        y = np.arange(n)
+
+        # sns.color_palette() reads the active theme/palette
+        palette = sns.color_palette()
+        pos_color, neg_color = palette[0], palette[1]
+
+        # determine x limits and padding
+        x_min = min(contribs.min(), 0.0)
+        x_max = max(contribs.max(), 0.0)
+        x_range = x_max - x_min if (x_max - x_min) != 0 else 1.0
+        pad = x_range * 0.03
+        ax.set_xlim(x_min - pad * 4, x_max + pad * 4)
+
+        # assign per-bar color by sign (but all positives same, all negatives same)
+        colors = [pos_color if v >= 0 else neg_color for v in contribs]
+
+        # Draw bars starting at 0 so negatives extend left automatically
+        ax.barh(y, contribs, left=0, height=0.6, align='center',
+                color=colors, edgecolor='k', linewidth=0.3)
+
+        # Baseline at 0
+        ax.axvline(0.0, color='black')
+
+        # Add value labels next to each bar (rounded to 2 decimals, signed)
+        for i, val in enumerate(contribs):
+            label = f"{val:+.2f}%"
+            if val >= 0:
+                text_x = val + pad
+                ha = 'left'
+            else:
+                text_x = val - pad
+                ha = 'right'
+            ax.text(text_x, y[i], label, va='center', ha=ha, color=colors[i], fontsize=9, fontweight='bold')
+
+        pred_text = f"Chance: {total_pred:.2f}%"
+        ax.annotate(
+            pred_text, xy=(1.1, 0.02), xycoords='axes fraction',
+            ha='right', va='bottom', fontsize=12, fontweight='bold',
+            bbox={"boxstyle": "round,pad=0.3", "fc": "white", "ec": "none"}
+        )
+
+        # Y labels and formatting
+        ax.set_yticks(y)
+        ax.set_yticklabels(feat_ordered, fontsize=10)
+        ax.invert_yaxis()  # largest on top
+        ax.set_xlabel("Contribution to prediction (%)", fontsize=11)
+        ax.grid(axis='x', linestyle=':', linewidth=0.6, alpha=0.7)
+
+        plt.title("SHAP contributions", fontsize=12)
+        plt.tight_layout()
+        plt.show()
