@@ -1,4 +1,4 @@
-from typing import Tuple
+from typing import Tuple, Optional
 import yaml
 import warnings
 import numpy as np
@@ -11,6 +11,7 @@ from sklearn.preprocessing import PowerTransformer
 from sklearn.model_selection import StratifiedKFold
 from skopt import BayesSearchCV
 from shap import Explanation
+from lime.lime_tabular import LimeTabularExplainer
 
 class Helpers:
 
@@ -326,3 +327,62 @@ class Helpers:
         plt.title("SHAP contributions", fontsize=12)
         plt.tight_layout()
         plt.show()
+
+
+    def get_recommended_values(
+            self,
+            data,
+            model,
+            lime_explainer: LimeTabularExplainer,
+            feature_idx: int,
+            prob_threshold: float = 0.75,
+            min_limit: float = -2.0,
+            max_limit: float = 2.0,
+            window: float = 1.0,
+            step: float = 0.1
+        ) -> Optional[float]:
+        """Get recommended values for a particular feature to improve the probability of loan approval."""
+
+        exp = lime_explainer.explain_instance(data_row=data, predict_fn=model.predict_proba)
+        
+        slope = None
+        for idx, weight in exp.local_exp[1]:
+            if idx == feature_idx:
+                slope = float(weight)
+                break
+
+        if slope is None:
+            slope = 0.0     # feature not in the local explanation (weight implicitly zero)
+
+        if abs(slope) < 1e-12:
+            print("Slope zero")
+            # If slope is effectively zero, the local linear model says changing this
+            # feature won't change predicted probability
+            return None
+        
+        intercept = float(exp.intercept[1])
+
+        # intercept + slope * feature_value = prob_threshold  => feature_value = (prob_threshold - intercept) / slope
+        center_value = (prob_threshold - intercept) / slope
+
+        start = max(min_limit, center_value - window)
+        end = min(max_limit, center_value + window)
+
+        values = []
+        v = start
+        while v <= end + 1e-9:
+            values.append(round(v, 2))
+            v += step
+
+        passing = []
+        for val in values:
+            row = data.copy()
+            row[feature_idx] = val
+            prob = float(model.predict_proba(row.reshape(1, -1))[0, 1])
+            if prob >= prob_threshold:
+                passing.append(val)
+
+        if not passing:
+            return None
+
+        return min(passing)
