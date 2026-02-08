@@ -3,7 +3,7 @@
     { "src": "/(.*)", "dest": "api/base.py" }
   ],
   "functions": {
-    "api/**": {
+    "api/base.py": {
       "excludeFiles": "{config,datasets,notebooks,utils}/**"
     }
   }
