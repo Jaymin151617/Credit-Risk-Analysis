@@ -44,7 +44,7 @@ with st.form("loan_form"):
             index=2,
         )
         person_income = st.number_input(
-            "Annual income (USD)", min_value=0.0, value=50000.0, step=10000.0, format="%.2f",
+            "Annual income (USD)", min_value=8000.0, max_value=175000.0, value=50000.0, step=10000.0, format="%.2f",
             help="Enter the gross annual income (before tax)."
         )
         person_home_ownership = st.selectbox(
@@ -58,7 +58,9 @@ with st.form("loan_form"):
         )
 
     with right:
-        loan_amount = st.number_input("Loan amount (USD)", min_value=0.0, value=200000.0, step=1000.0, format="%.2f")
+        loan_amount = st.number_input(
+            "Loan amount (USD)", min_value=500.0, max_value=25000.0, value=10000.0, step=1000.0, format="%.2f"
+        )
         loan_intent = st.selectbox(
             "Purpose of loan",
             ["Venture", "Medical", "Personal", "Education", "Home Improvement", "Debt Consolidation"],
