@@ -1,10 +1,5 @@
 {
   "version": 2,
-  "excludeFiles": [
-    "**/*",
-    "!app/**",
-    "!models/**"
-  ],
   "builds": [
     {
       "src": "app/base.py",
@@ -13,5 +8,10 @@
   ],
   "routes": [
     { "src": "/(.*)", "dest": "app/base.py" }
-  ]
+  ],
+  "functions": {
+    "app/**": {
+      "excludeFiles": "{config,datasets,notebooks,utils}/**"
+    }
+  }
 }
