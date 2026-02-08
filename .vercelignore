@@ -1,5 +1,5 @@
-*
-!api/**
-!models/**
-!requirements.txt
-!vercel.json
+config/**
+datasets/**
+notebooks/**
+utils/**
+requirements-dev.txt
