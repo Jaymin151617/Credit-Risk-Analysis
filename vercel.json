@@ -1,7 +1,15 @@
 {
   "version": 2,
   "builds": [
-    { "src": "app/base.py", "use": "@vercel/python" }
+    {
+      "src": "app/base.py",
+      "use": "@vercel/python",
+      "excludeFiles": [
+        "**/*",
+        "!models/**",
+        "!app/**"
+      ]
+    }
   ],
   "routes": [
     { "src": "/(.*)", "dest": "app/base.py" }
