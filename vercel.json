@@ -1,10 +1,15 @@
 {
-  "routes": [
-    { "src": "/(.*)", "dest": "api/base.py" }
-  ],
-  "functions": {
-    "api/base.py": {
-      "excludeFiles": "{config,datasets,notebooks,utils}/**"
+  "version": 2,
+  "builds": [
+    {
+      "src": "api/base.py",
+      "use": "@vercel/python"
     }
-  }
+  ],
+  "routes": [
+    {
+      "src": "/(.*)",
+      "dest": "api/base.py"
+    }
+  ]
 }
