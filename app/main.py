@@ -14,6 +14,9 @@ st.markdown(
     "and a suggested interest rate (if any) to improve the chances."
 )
 
+linkedin = "https://www.linkedin.com/in/jaymin-mistry-data-science"
+st.markdown(f'You can connect with me on LinkedIn [here]({linkedin}).')
+
 # Map backend feature keys -> friendly labels (matches the form)
 DISPLAY_NAME_MAP = {
     "person_age": "Age",
