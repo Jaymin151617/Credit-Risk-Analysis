@@ -1,14 +1,14 @@
 {
   "version": 2,
+  "excludeFiles": [
+    "**/*",
+    "!app/**",
+    "!models/**"
+  ],
   "builds": [
     {
       "src": "app/base.py",
-      "use": "@vercel/python",
-      "excludeFiles": [
-        "**/*",
-        "!models/**",
-        "!app/**"
-      ]
+      "use": "@vercel/python"
     }
   ],
   "routes": [
