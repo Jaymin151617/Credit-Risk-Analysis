@@ -1,3 +1,34 @@
+"""
+Utility module that contains small helper functions commonly 
+used during exploratory data analysis (EDA), model preprocessing,
+hyperparameter tuning, visualization, and model explainability.
+
+Functions
+---------
+
+set_global_settings()
+    Configure global library state. Designed to be called once at startup.
+
+create_bar_chart(), create_boxplot(), create_scatterplot(),
+create_distribution_plot(), create_correlation_heatmap()
+    Reusable plotting helpers (seaborn/matplotlib) for common EDA charts.
+
+create_shap_waterfall()
+    Custom SHAP-style waterfall visualization.
+
+power_transform(), reverse_power_transform()
+    Convenience wrappers that applies a transformation (or its inverse) to a DataFrame.
+
+find_best_params()
+    Bayesian hyperparameter search using BayesSearchCV.
+
+get_recommended_values()
+    Uses LIME to suggest a feature change 
+    and checks with the real model if it improves the prediction enough.
+
+"""
+
+
 # ---------------------------------------------------------------------
 # Standard Library Imports
 # ---------------------------------------------------------------------
@@ -780,7 +811,7 @@ def find_best_params(
 
 def get_recommended_values(
         data: np.ndarray,
-        model,
+        model: object,
         lime_explainer: LimeTabularExplainer,
         feature_idx: int,
         prob_threshold: float = 0.75,
