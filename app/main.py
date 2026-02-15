@@ -270,13 +270,17 @@ if submitted:
     # Disclaimer Section
     st.markdown(
         """
-        ⚠️ Note
+        <div>
 
-        This app is for demonstration only and not an official loan decision tool.
+            ⚠️ Note
 
-        The approval chance shown here is an estimate and may not reflect real-world 
-        decisions. More training data and validation could lead to better predictions 
-        and clearer explanations.
+            This app is for demonstration only and not an official loan decision tool.
+
+            The approval chance shown here is an estimate and may not reflect real-world 
+            decisions. It might not make sense for all kinds of inputs. More training 
+            data and validation could lead to better predictions and clearer explanations.
+        
+        </div>
         """,
-        unsafe_allow_html=True
+        unsafe_allow_html=True,
     )
