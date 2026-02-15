@@ -232,7 +232,6 @@ if submitted:
     col3.metric("Approval chance with the new rate", new_pred_pct)
 
     # Display SHAP Contribution Chart
-
     st.subheader("Factor contributions")
     st.caption(
         "Blue bars helped the applicant; red bars made approval less likely."
