@@ -13,7 +13,7 @@ The repository includes:
 - A FastAPI inference service (`app/api.py`)
 - A Streamlit frontend (`app/main.py`)
 
-**Live Demo:** `https://credit-risk-analysis-ui.onrender.com/`
+**Live Demo:** [https://credit-risk-analysis-ui.onrender.com/](https://credit-risk-analysis-ui.onrender.com/)
 
 ## Key Features
 
