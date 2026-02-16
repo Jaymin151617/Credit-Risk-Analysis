@@ -51,7 +51,7 @@ echo "Starting FastAPI on port ${FASTAPI_PORT}..."
 
 # Launch uvicorn with auto-reload enabled (dev-only feature)
 # --reload watches files and restarts server on changes
-uvicorn base:app \
+uvicorn app.api:app \
   --host ${FASTAPI_HOST} \
   --port ${FASTAPI_PORT} \
   --reload &
@@ -68,7 +68,7 @@ echo "Starting Streamlit on port ${STREAMLIT_PORT}..."
 
 # Run Streamlit app bound to all interfaces
 # This allows access via localhost or network IP
-streamlit run main.py \
+streamlit run app/main.py \
   --server.port ${STREAMLIT_PORT} \
   --server.address 0.0.0.0 &
 
