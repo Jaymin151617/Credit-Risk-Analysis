@@ -2,7 +2,7 @@
 
 [![License](https://img.shields.io/badge/license-Apache-blue.svg)](./LICENSE)
 [![Python](https://img.shields.io/badge/python-3.12.12-blue)](https://www.python.org/)
-![Status](https://img.shields.io/badge/status-complete-brightgreen)(#)
+[![Status](https://img.shields.io/badge/status-complete-brightgreen)](#)
 
 ## Table of Contents
 - [Overview](#overview)
