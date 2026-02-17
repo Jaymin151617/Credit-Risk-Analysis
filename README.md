@@ -2,7 +2,7 @@
 
 [![License](https://img.shields.io/badge/license-Apache-blue.svg)](./LICENSE)
 [![Python](https://img.shields.io/badge/python-3.12.12-blue)](https://www.python.org/)
-[![Status](https://img.shields.io/badge/status-demo%20%7C%20dev-yellowgreen)](#)
+![Status](https://img.shields.io/badge/status-complete-brightgreen)
 
 ## Table of Contents
 - [Overview](#overview)
@@ -10,9 +10,8 @@
 - [Quick Start](#quick-start)
 - [API Reference](#api-reference)
 - [Repository Structure](#repository-structure)
-- [Data Source](#model-performance-snapshot)
 - [Model Performance Snapshot](#model-performance-snapshot)
-- [Reproducibility & Provenance](#reproducibility--provenance)
+- [Reproducibility](#reproducibility)
 - [Security & Privacy](#security--privacy)
 - [Limitations](#limitations)
 - [License](#license)
@@ -20,7 +19,7 @@
 ---
 
 ## Overview
-This project predicts the probability of loan approval from applicant and loan attributes, returns per-feature explanation values (SHAP/LIME style contributions), and can recommend a revised interest rate to improve approval probability where applicable. It is intended as a demonstration and research codebase for interpretable ML and simple deployment patterns.
+This project predicts the probability of loan approval from applicant and loan attributes, returns per-feature explanation values (SHAP contributions), and can recommend a revised interest rate to improve approval probability where applicable. It is intended as a demonstration and research codebase for interpretable ML and simple deployment patterns.
 
 Core components:
 - Notebook pipeline to reproduce dataset preparation, feature engineering, model training and explainability.
@@ -179,38 +178,33 @@ Credit-Risk-Analysis/
 
 ---
 
-## Data Source
+## Model Performance Snapshot
 
-- Primary dataset: [Loan Approval Classification Dataset (Kaggle)](https://www.kaggle.com/datasets/taweilo/loan-approval-classification-data)
-- The project notebook explicitly treats the data as synthetic and educational.
+From `notebooks/05_model_selection.ipynb`:
 
----
+- Validation (tuned models):
+  - `LightGBM`: weighted F1 `0.92`, accuracy `0.92`
+  - `XGBoost`: weighted F1 `0.92`, accuracy `0.92`
 
-## Model performance snapshot
+`LightGBM` selected for efficiency/deployment fit
 
-Validation:
-- LightGBM: weighted F1 0.92, accuracy 0.92  
-- XGBoost: weighted F1 0.92, accuracy 0.92  
-
-Held-out test:
-- Accuracy: 0.93  
-- Weighted F1: 0.93  
-- Class-1 F1: 0.84  
-
-LightGBM selected for smaller model size and lower inference latency.
+- Held-out test set (`n=4391`):
+  - Accuracy: `0.93`
+  - Weighted F1: `0.93`
+  - Class 1 (approved) F1: `0.84`
 
 ---
 
-## Reproducibility & Provenance
-- Data source: Loan Approval Classification Dataset (Kaggle)
+## Reproducibility
+- Data source: [Loan Approval Classification Dataset (Kaggle)](https://www.kaggle.com/datasets/taweilo/loan-approval-classification-data)
 - Training seed: 100 (Configurable via environment variable `RANDOM_STATE`)
 - Training pipeline: notebooks 01 → 06
-- Artifacts: models/ directory
+- Artifacts: `models/` directory
 
 To retrain:
 1. Run notebooks in order
 2. Export final model and transformers
-3. Replace artifacts in models/
+3. Replace artifacts in `models/`
 
 ---
 
